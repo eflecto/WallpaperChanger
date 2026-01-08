@@ -1,7 +1,12 @@
 # 🖼️ Wallpaper Changer - Утилита смены обоев для Windows 11
 
 Мощная утилита для автоматической смены обоев рабочего стола и экрана блокировки в Windows 11.
+# 🖼️ WallpaperChanger
 
+![Windows](https://img.shields.io/badge/Windows-10%2F11-blue)
+![.NET](https://img.shields.io/badge/.NET-8.0-purple)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Version](https://img.shields.io/badge/Version-1.0.0-orange)
 ## ✨ Основные возможности
 
 ### 🖥️ Смена обоев рабочего стола
