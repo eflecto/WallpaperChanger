@@ -1,0 +1,271 @@
+<Window x:Class="WallpaperChanger.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Смена Обоев и Экрана Блокировки" Height="650" Width="900"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="4" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#005A9E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#0078D4" CornerRadius="5" Padding="15" Margin="0,0,0,10">
+            <StackPanel>
+                <TextBlock Text="🖼️ Управление Обоями Windows 11" 
+                          FontSize="20" FontWeight="Bold" 
+                          Foreground="White"/>
+                <TextBlock x:Name="StatusText" Text="Готово к работе" 
+                          FontSize="12" Foreground="#E0E0E0" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Folder Selection -->
+                <GroupBox Header="📁 Выбор папки с изображениями">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="FolderPathTextBox" 
+                                    Grid.Column="0" 
+                                    Padding="8" 
+                                    Margin="5"
+                                    IsReadOnly="True"/>
+                            <Button x:Name="BrowseFolderButton" 
+                                   Grid.Column="1" 
+                                   Content="Обзор..."
+                                   Click="BrowseFolderButton_Click"/>
+                        </Grid>
+                        <TextBlock x:Name="ImageCountText" 
+                                  Text="Изображений не выбрано" 
+                                  FontStyle="Italic" 
+                                  Foreground="Gray"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Desktop Wallpaper Settings -->
+                <GroupBox Header="🖥️ Настройки обоев рабочего стола">
+                    <StackPanel>
+                        <CheckBox x:Name="EnableDesktopChange" 
+                                 Content="Включить автоматическую смену обоев"
+                                 Margin="5"
+                                 Checked="EnableDesktopChange_Checked"
+                                 Unchecked="EnableDesktopChange_Unchecked"/>
+                        
+                        <TextBlock Text="Частота смены:" FontWeight="Bold" Margin="5,10,5,5"/>
+                        
+                        <ComboBox x:Name="FrequencyTypeCombo" 
+                                 Margin="5"
+                                 SelectionChanged="FrequencyTypeCombo_SelectionChanged">
+                            <ComboBoxItem Content="Секунды" IsSelected="True"/>
+                            <ComboBoxItem Content="Минуты"/>
+                            <ComboBoxItem Content="Часы"/>
+                            <ComboBoxItem Content="Дни"/>
+                            <ComboBoxItem Content="Недели"/>
+                            <ComboBoxItem Content="Месяцы"/>
+                            <ComboBoxItem Content="В определенное время"/>
+                        </ComboBox>
+
+                        <StackPanel x:Name="IntervalPanel" Margin="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Интервал:" VerticalAlignment="Center"/>
+                                <Slider x:Name="IntervalSlider" 
+                                       Grid.Column="1"
+                                       Minimum="1" 
+                                       Maximum="60" 
+                                       Value="5"
+                                       TickFrequency="1"
+                                       IsSnapToTickEnabled="True"
+                                       Margin="10,0"
+                                       ValueChanged="IntervalSlider_ValueChanged"/>
+                                <TextBlock x:Name="IntervalValueText" 
+                                          Grid.Column="2" 
+                                          Text="5" 
+                                          MinWidth="40"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel x:Name="SpecificTimePanel" Visibility="Collapsed" Margin="5">
+                            <TextBlock Text="Время смены (формат: чч:мм, можно несколько через точку с запятой):" Margin="0,0,0,5"/>
+                            <TextBox x:Name="SpecificTimesTextBox" 
+                                    Padding="8"
+                                    Text="09:00;13:00;18:00"
+                                    ToolTip="Пример: 09:00;13:00;18:00"/>
+                        </StackPanel>
+
+                        <CheckBox x:Name="ShuffleCheckBox" 
+                                 Content="Случайный порядок" 
+                                 IsChecked="True"
+                                 Margin="5,10,5,5"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Lock Screen Settings -->
+                <GroupBox Header="🔒 Настройки экрана блокировки">
+                    <StackPanel>
+                        <CheckBox x:Name="EnableLockScreenChange" 
+                                 Content="Синхронизировать экран блокировки с обоями рабочего стола"
+                                 Margin="5"/>
+                        
+                        <Separator Margin="5,10"/>
+                        
+                        <CheckBox x:Name="EnableProgramBasedLockScreen" 
+                                 Content="Менять экран блокировки в зависимости от открытой программы"
+                                 Margin="5"
+                                 Checked="EnableProgramBasedLockScreen_Checked"
+                                 Unchecked="EnableProgramBasedLockScreen_Unchecked"/>
+                        
+                        <StackPanel x:Name="ProgramMappingPanel" 
+                                   Visibility="Collapsed" 
+                                   Margin="5,10,5,5">
+                            <TextBlock Text="Привязки программ к изображениям:" 
+                                      FontWeight="Bold" 
+                                      Margin="0,0,0,5"/>
+                            
+                            <Border BorderBrush="#CCCCCC" 
+                                   BorderThickness="1" 
+                                   CornerRadius="3"
+                                   Padding="5">
+                                <StackPanel>
+                                    <ListView x:Name="ProgramMappingsListView" 
+                                             Height="150"
+                                             Margin="0,0,0,5">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn Header="Программа" Width="200" DisplayMemberBinding="{Binding ProgramName}"/>
+                                                <GridViewColumn Header="Путь к изображению" Width="350" DisplayMemberBinding="{Binding ImagePath}"/>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                    
+                                    <Grid Margin="0,5,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <TextBox x:Name="ProgramNameTextBox" 
+                                                Grid.Column="0"
+                                                Padding="8"
+                                                Margin="0,0,5,0"
+                                                ToolTip="Имя программы (например: chrome.exe)"/>
+                                        
+                                        <TextBox x:Name="ProgramImagePathTextBox" 
+                                                Grid.Column="1"
+                                                Padding="8"
+                                                Margin="0,0,5,0"
+                                                IsReadOnly="True"/>
+                                        
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Button Content="📂" 
+                                                   Width="35"
+                                                   Click="BrowseProgramImageButton_Click"
+                                                   ToolTip="Выбрать изображение"/>
+                                            <Button Content="➕" 
+                                                   Width="35"
+                                                   Click="AddProgramMappingButton_Click"
+                                                   ToolTip="Добавить привязку"/>
+                                            <Button Content="➖" 
+                                                   Width="35"
+                                                   Background="#D13438"
+                                                   Click="RemoveProgramMappingButton_Click"
+                                                   ToolTip="Удалить привязку"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Control Buttons -->
+        <Border Grid.Row="2" 
+               BorderBrush="#CCCCCC" 
+               BorderThickness="0,1,0,0" 
+               Padding="0,10,0,0"
+               Margin="0,10,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button x:Name="StartButton" 
+                           Content="▶️ Запустить"
+                           Width="120"
+                           Click="StartButton_Click"/>
+                    <Button x:Name="StopButton" 
+                           Content="⏸️ Остановить"
+                           Width="120"
+                           IsEnabled="False"
+                           Click="StopButton_Click"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="🔄 Сменить сейчас"
+                           Width="140"
+                           Click="ChangeNowButton_Click"/>
+                    <Button Content="⚙️ Настройки"
+                           Width="120"
+                           Click="SettingsButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
