@@ -5,8 +5,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <AssemblyName>WallpaperChanger</AssemblyName>
     <RootNamespace>WallpaperChanger</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>

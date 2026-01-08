@@ -74,6 +74,10 @@ namespace WallpaperChanger
 
         private void FrequencyTypeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Проверка, что все элементы загружены
+            if (IntervalPanel == null || SpecificTimePanel == null)
+                return;
+                
             if (FrequencyTypeCombo.SelectedIndex == 6) // "В определенное время"
             {
                 IntervalPanel.Visibility = Visibility.Collapsed;
@@ -89,6 +93,9 @@ namespace WallpaperChanger
 
         private void UpdateIntervalSlider()
         {
+            if (FrequencyTypeCombo == null || IntervalSlider == null)
+                return;
+                
             switch (FrequencyTypeCombo.SelectedIndex)
             {
                 case 0: // Секунды
@@ -126,7 +133,7 @@ namespace WallpaperChanger
 
         private void IntervalSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (IntervalValueText != null)
+            if (IntervalValueText != null && IntervalSlider != null)
             {
                 IntervalValueText.Text = ((int)IntervalSlider.Value).ToString();
             }
@@ -134,26 +141,34 @@ namespace WallpaperChanger
 
         private void EnableDesktopChange_Checked(object sender, RoutedEventArgs e)
         {
-            FrequencyTypeCombo.IsEnabled = true;
-            IntervalSlider.IsEnabled = true;
-            ShuffleCheckBox.IsEnabled = true;
+            if (FrequencyTypeCombo != null)
+                FrequencyTypeCombo.IsEnabled = true;
+            if (IntervalSlider != null)
+                IntervalSlider.IsEnabled = true;
+            if (ShuffleCheckBox != null)
+                ShuffleCheckBox.IsEnabled = true;
         }
 
         private void EnableDesktopChange_Unchecked(object sender, RoutedEventArgs e)
         {
-            FrequencyTypeCombo.IsEnabled = false;
-            IntervalSlider.IsEnabled = false;
-            ShuffleCheckBox.IsEnabled = false;
+            if (FrequencyTypeCombo != null)
+                FrequencyTypeCombo.IsEnabled = false;
+            if (IntervalSlider != null)
+                IntervalSlider.IsEnabled = false;
+            if (ShuffleCheckBox != null)
+                ShuffleCheckBox.IsEnabled = false;
         }
 
         private void EnableProgramBasedLockScreen_Checked(object sender, RoutedEventArgs e)
         {
-            ProgramMappingPanel.Visibility = Visibility.Visible;
+            if (ProgramMappingPanel != null)
+                ProgramMappingPanel.Visibility = Visibility.Visible;
         }
 
         private void EnableProgramBasedLockScreen_Unchecked(object sender, RoutedEventArgs e)
         {
-            ProgramMappingPanel.Visibility = Visibility.Collapsed;
+            if (ProgramMappingPanel != null)
+                ProgramMappingPanel.Visibility = Visibility.Collapsed;
         }
 
         private void BrowseProgramImageButton_Click(object sender, RoutedEventArgs e)
